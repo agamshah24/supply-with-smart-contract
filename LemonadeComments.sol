@@ -27,9 +27,10 @@ contract LemonadeStand {
     mapping (uint => Item) items;
 
     // Event ForSale
+    event ForSale(uint skuCount);
 
-
-// Event Sold
+    // Event Sold
+    event Sold(uint sku);
 
 // Modifier: Only Owner
 
