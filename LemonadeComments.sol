@@ -32,17 +32,35 @@ contract LemonadeStand {
     // Event Sold
     event Sold(uint sku);
 
-// Modifier: Only Owner
+    // Modifier: Only Owner to see if msg.sender == owner of the contract.
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
 
-// Modifier: Verify Caller
+    // Modifier: Verify Caller
+    modifier verifyCaller(address _address) {
+        require(msg.sender == _address);
+        _;
+    }
 
-// Modifier: Paid Enough
+    // Modifier: Paid Enough - It checks if the paid amount is sufficient to cover the price
+    modifier paidEnough(uint _price) {
+        require(msg.value >= _price);
+        _;
+    }
 
-// Modifier: For Sale
+    // Modifier: For Sale - It checks if an item.state of a sku is ForSale
+    modifier forSale(uint _sku) {
+        require(items[_sku].state == State.ForSale);
+        _;
+    }
 
-// Modifier: Sold
-
-// Modifier: Only Owner
+    // Modifier: Sold - It checks if an item.state of a sku is Sold
+    modifier sold(uint _sku) {
+        require(items[_sku].state == State.Sold);
+        _;
+    }
 
 // Function: Constructor to set some initial values
 
