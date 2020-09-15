@@ -77,11 +77,36 @@ contract LemonadeStand {
         emit ForSale(skuCount);
 
         // Add new Item into inventory and mark it for sale
-        items[skuCount] = Item({name: _name,sku: skuCount, price: _price, state: State.ForSale, seller: msg.sender, buyer: 0});        
+        items[skuCount] = Item({name: _name,sku: skuCount, price: _price, state: State.ForSale, seller: msg.sender, buyer: address(0)});        
     }
 
-// Function: Buy Item
+    // Function: Buy Item
+    function buyItem(uint _sku) forSale(_sku) paidEnough(items[_sku].price) public payable {
+        address buyer = msg.sender;
+        uint price = items[_sku].price;
+        // Update the buyer
+        items[_sku].buyer = buyer;
+        // Update the state
+        items[_sku].state = State.Sold;
+        // Transfer money to seller
+        payable(items[_sku].seller).transfer(price);
+        // emit the appropriate even
+        emit Sold(_sku);
+    }
 
-// Function: Fetch Item
-
+    // Function: Fetch Item
+    function fetchItem(uint _sku) view public returns(string memory name, uint sku, uint price, string memory stateIs, address seller, address buyer) {
+        uint state;
+        name = items[_sku].name;
+        sku = items[_sku].sku;
+        price = items[_sku].price;
+        state = uint(items[_sku].state);
+        if (state == 0) {
+            stateIs = "For Sale";
+        } else if (state == 1) {
+            stateIs = "Sold";
+        }
+        seller = items[_sku].seller;
+        buyer = items[_sku].buyer;
+    }
 }
