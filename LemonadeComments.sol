@@ -62,9 +62,23 @@ contract LemonadeStand {
         _;
     }
 
-// Function: Constructor to set some initial values
+    // Function: Constructor to set some initial values
+    constructor() public {
+        owner = msg.sender;
+        skuCount = 0;
+    }
 
-// Function: Add Item
+    // Function: Add Item
+    function addItem(string memory _name, uint _price) onlyOwner public {
+        // Increment sku
+        skuCount = skuCount + 1;
+
+        // Emit the appropriate event
+        emit ForSale(skuCount);
+
+        // Add new Item into inventory and mark it for sale
+        items[skuCount] = Item({name: _name,sku: skuCount, price: _price, state: State.ForSale, seller: msg.sender, buyer: 0});        
+    }
 
 // Function: Buy Item
 
