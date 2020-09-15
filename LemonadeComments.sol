@@ -10,7 +10,7 @@ contract LemonadeStand {
     uint skuCount;
 
     // Enum: 'State' with values 'ForSale' (State: For sale)
-    enum State {ForSale, Sold}
+    enum State {ForSale, Sold, Shipped}
 
     // Struct: 'Item' with the following fields: name, sku, price, state, seller, buyer
     struct Item {
@@ -31,6 +31,9 @@ contract LemonadeStand {
 
     // Event Sold
     event Sold(uint sku);
+
+    // Event Shipped
+    event Shipped(uint sku);
 
     // Modifier: Only Owner to see if msg.sender == owner of the contract.
     modifier onlyOwner() {
@@ -108,5 +111,13 @@ contract LemonadeStand {
         }
         seller = items[_sku].seller;
         buyer = items[_sku].buyer;
+    }
+
+    // ShipItem allows owner to change the state of an Item to "Shipped"
+    function shipItem(uint _sku) public sold(_sku) verifyCaller(items[_sku].seller) {
+        // Update the state
+        items[_sku].state = State.Shipped;
+        // Emit the appropriate even
+        emit Shipped(_sku);
     }
 }
