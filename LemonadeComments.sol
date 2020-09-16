@@ -65,6 +65,14 @@ contract LemonadeStand {
         _;
     }
 
+    // Modifier: It checks the price and refunds the remaining balance
+    modifier checkValue(uint _sku) {
+        uint _price = items[_sku].price;
+        uint amountToRefund = msg.value - _price;
+        payable(items[_sku].seller).transfer(amountToRefund);
+        _;
+    }
+
     // Function: Constructor to set some initial values
     constructor() public {
         owner = msg.sender;
@@ -84,7 +92,7 @@ contract LemonadeStand {
     }
 
     // Function: Buy Item
-    function buyItem(uint _sku) forSale(_sku) paidEnough(items[_sku].price) public payable {
+    function buyItem(uint _sku) forSale(_sku) paidEnough(items[_sku].price) checkValue(_sku) public payable {
         address buyer = msg.sender;
         uint price = items[_sku].price;
         // Update the buyer
